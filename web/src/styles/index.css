@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #fff4ed;
+  --color-brand-100: #ffe6d5;
+  --color-brand-500: #f2662d;
+  --color-brand-600: #dd4f18;
+  --color-brand-700: #b83c12;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: #fafafa;
+  color: #18181b;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* área segura para notch/home-indicator em iOS quando instalado como PWA */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
