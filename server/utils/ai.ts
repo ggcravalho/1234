@@ -19,7 +19,7 @@ function getClient(): GoogleGenAI {
 
 // Modelo do tier gratuito da API do Gemini (Google AI Studio). Pode ser
 // sobrescrito via env caso um modelo mais novo/melhor esteja disponível.
-const MODEL = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.6-flash";
 
 // Esquema JSON do plano completo — reaproveitado tanto para extração direta
 // (responseJsonSchema) quanto como parâmetros da function "submit_plan" no
