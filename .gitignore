@@ -5,10 +5,6 @@ dist
 .cache
 .output
 .env
-.vercel
 .env*.local
-.slack/apps.json
-.slack/apps.dev.json
-.slack/config.json
-friction.md
-.vscode
+.vercel
+/public

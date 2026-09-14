@@ -1,6 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.2.6/schema.json",
-  "plugins": [".biome/no-console-prefer-logger.grit"],
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -10,7 +9,8 @@
     "ignoreUnknown": false,
     "includes": [
       "server/**/*.{ts,js}",
-      "manifest.json",
+      "web/src/**/*.{ts,tsx}",
+      "scripts/**/*.{ts,js}",
       "nitro.config.ts",
       "tsconfig.json",
       "biome.json"
@@ -22,7 +22,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "lineWidth": 80,
+    "lineWidth": 100,
     "attributePosition": "auto"
   },
   "linter": {
@@ -53,6 +53,18 @@
           "recommended": true,
           "suspicious": {
             "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["web/src/**/*.{ts,tsx}"],
+      "linter": {
+        "enabled": true,
+        "rules": {
+          "recommended": true,
+          "a11y": {
+            "recommended": true
           }
         }
       }
