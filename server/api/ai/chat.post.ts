@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, readBody } from "h3";
 import { getDb } from "../../db/client";
 import type { ChatMessage } from "../../types";
-import { runPlanChatTurn } from "../../utils/anthropic";
+import { runPlanChatTurn } from "../../utils/ai";
 import { requireUser } from "../../utils/auth";
 import { buildTrainingContextSummary } from "../../utils/history";
 

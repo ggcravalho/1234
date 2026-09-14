@@ -1,5 +1,5 @@
 import { createError, defineEventHandler, readBody } from "h3";
-import { parsePlanFromText } from "../../utils/anthropic";
+import { parsePlanFromText } from "../../utils/ai";
 import { requireUser } from "../../utils/auth";
 
 export default defineEventHandler(async (event) => {

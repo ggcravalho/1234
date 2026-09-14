@@ -15,8 +15,10 @@ do próprio app para gerar um novo, com base no histórico de treino de cada um.
   baseadas em [h3](https://h3.unjs.io)) + SQLite via `node:sqlite`
   (módulo nativo do Node, sem dependências de compilação).
 - **Frontend**: React + Vite + TypeScript + Tailwind CSS v4, mobile-first.
-- **IA**: API da Anthropic (Claude), usada para interpretar planos colados em
-  texto livre e para conduzir o assistente de criação de plano.
+- **IA**: API do Google Gemini (tier gratuito, via [Google AI Studio](https://aistudio.google.com/apikey)),
+  usada para interpretar planos colados em texto livre e para conduzir o
+  assistente de criação de plano. Sem custo para uso pessoal (dentro dos
+  limites de requisições por dia/minuto do tier gratuito).
 
 ## Estrutura do projeto
 
@@ -52,8 +54,9 @@ scripts/seed.ts   cria as duas contas de usuário a partir do .env
    cp .env.example .env
    ```
 
-   - `ANTHROPIC_API_KEY`: chave da API da Anthropic, necessária para os
-     recursos de IA (interpretar plano colado e o assistente de chat).
+   - `GEMINI_API_KEY`: chave gratuita da API do Gemini, necessária para os
+     recursos de IA (interpretar plano colado e o assistente de chat). Crie a
+     sua em https://aistudio.google.com/apikey (não pede cartão de crédito).
    - `SEED_USER1_*` / `SEED_USER2_*`: nome, e-mail e senha das duas contas do
      app (o casal). Usadas apenas pelo script de seed.
 
