@@ -14,6 +14,7 @@ function emptyExercise(order: number): PlanExerciseDraft {
     order,
     supersetGroup: null,
     restSeconds: 60,
+    technique: null,
     variations: [{ week: 1, sets: 3, reps: "10", loadKg: null }],
   };
 }
@@ -130,6 +131,7 @@ export default function PlanReview() {
           order: w.exercises.length,
           supersetGroup: null,
           restSeconds: 60,
+          technique: null,
           variations: [{ week: 1, sets: 3, reps: "10", loadKg: null }],
         },
       ],
@@ -236,6 +238,17 @@ export default function PlanReview() {
                       }
                       placeholder="Descanso (s)"
                       className="w-28 rounded-lg border border-zinc-200 px-2 py-1"
+                    />
+                    <input
+                      value={ex.technique ?? ""}
+                      onChange={(e) =>
+                        updateExercise(wIndex, exIndex, (item) => ({
+                          ...item,
+                          technique: e.target.value || null,
+                        }))
+                      }
+                      placeholder="Técnica (ex: Drop-set, Pirâmide)"
+                      className="w-full rounded-lg border border-zinc-200 px-2 py-1"
                     />
                   </div>
 

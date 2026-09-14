@@ -57,6 +57,11 @@ const PLAN_JSON_SCHEMA = {
                   type: "integer",
                   description: "Descanso entre séries, em segundos.",
                 },
+                technique: {
+                  type: "string",
+                  description:
+                    "Técnica de execução do exercício, se especificada (ex: 'Pirâmide', 'Drop-set na última série', 'Rest-pause na última', 'Isometria de 2s no alongamento', 'Bi-set'). Deixe vazio se não houver nenhuma técnica especial.",
+                },
                 variations: {
                   type: "array",
                   description:
@@ -66,7 +71,11 @@ const PLAN_JSON_SCHEMA = {
                     properties: {
                       week: { type: "integer" },
                       sets: { type: "integer" },
-                      reps: { type: "string", description: "Ex: '8-10' ou '12'." },
+                      reps: {
+                        type: "string",
+                        description:
+                          "Ex: '8-10' (faixa) ou '12' (fixo). Para pirâmides com repetições diferentes por série, use uma sequência com '→', ex: '12→10→8→6' (uma entrada por série, na ordem em que são feitas).",
+                      },
                       loadKg: {
                         type: "number",
                         description: "Carga sugerida em kg, se especificada.",
@@ -115,6 +124,7 @@ function toolInputToPlanDraft(input: Record<string, unknown>): PlanDraft {
             order: typeof ex.order === "number" ? ex.order : exIndex,
             supersetGroup: (ex.supersetGroup as string) || null,
             restSeconds: typeof ex.restSeconds === "number" ? ex.restSeconds : null,
+            technique: (ex.technique as string) || null,
             variations:
               rawVariations.length > 0
                 ? rawVariations.map((v, i) => ({
@@ -140,7 +150,9 @@ Regras importantes:
 - Um plano é uma sequência cíclica de treinos (ex: Treino A, B, C), que se repete do início ao chegar no fim.
 - Cada exercício pode ter séries/reps/carga diferentes por semana ou bloco de periodização — use o campo "variations" para isso.
   Se o plano não varia ao longo do tempo, envie uma única variação (week=1).
-- Agrupe exercícios feitos em sequência/circuito (superséries) com o mesmo "supersetGroup".
+- Agrupe exercícios feitos em sequência/circuito (superséries/bi-sets) com o mesmo "supersetGroup".
+- Registre a técnica de execução no campo "technique" quando especificada (pirâmide, drop-set,
+  rest-pause, isometria, bi-set etc.) — não descarte essa informação.
 - Use nomes de exercícios comuns em português (ex: "Supino Reto", "Puxada Alta").
 `.trim();
 

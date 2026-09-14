@@ -50,6 +50,8 @@ CREATE TABLE IF NOT EXISTS plan_exercises (
   order_in_workout INTEGER NOT NULL,
   superset_group TEXT,
   rest_seconds INTEGER,
+  -- Técnica de execução (pirâmide, drop-set, rest-pause, isometria...), opcional.
+  technique TEXT,
   -- JSON: PlanExerciseVariation[] — permite variações por semana/bloco.
   variations_json TEXT NOT NULL
 );

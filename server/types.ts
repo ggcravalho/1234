@@ -30,6 +30,8 @@ export type PlanExerciseDraft = {
   order: number;
   supersetGroup: string | null;
   restSeconds: number | null;
+  /** Técnica de execução (ex: "Pirâmide", "Drop-set na última série", "Rest-pause", "Isometria 2s"), opcional. */
+  technique: string | null;
   variations: PlanExerciseVariation[];
 };
 
@@ -53,6 +55,7 @@ export type PlanExercise = {
   order: number;
   supersetGroup: string | null;
   restSeconds: number | null;
+  technique: string | null;
   variations: PlanExerciseVariation[];
   /** Variação resolvida para a ocorrência atual do usuário que está consultando. */
   current: PlanExerciseVariation;

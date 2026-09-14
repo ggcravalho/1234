@@ -14,6 +14,7 @@ type Slot = {
   muscleGroup: string | null;
   supersetGroup: string | null;
   restSeconds: number | null;
+  technique: string | null;
   targetLabel: string;
   lastUsedLabel: string | null;
   sets: SetEntry[];
@@ -26,13 +27,27 @@ function parseFirstNumber(text: string, fallback: number): number {
   return match ? Number(match[0]) : fallback;
 }
 
+/**
+ * Repetições planejadas para cada série. Reconhece notação de pirâmide
+ * (ex: "12→10→8→6", uma reps por série) além do padrão "8-10" (faixa fixa
+ * repetida em todas as séries).
+ */
+function repsPerSet(reps: string, setCount: number): number[] {
+  if (reps.includes("→")) {
+    const steps = reps.split("→").map((s) => parseFirstNumber(s, 10));
+    return Array.from({ length: setCount }, (_, i) => steps[i] ?? steps[steps.length - 1] ?? 10);
+  }
+  const fixed = parseFirstNumber(reps, 10);
+  return Array.from({ length: setCount }, () => fixed);
+}
+
 function slotsFromWorkout(workout: NextWorkout["workout"]): Slot[] {
   if (!workout) return [];
   return [...workout.exercises]
     .sort((a, b) => a.order - b.order)
     .map((ex) => {
-      const defaultReps = parseFirstNumber(ex.current.reps, 10);
       const defaultLoad = ex.lastUsed?.loadKg ?? ex.current.loadKg ?? null;
+      const targetReps = repsPerSet(ex.current.reps, ex.current.sets);
       return {
         key: ex.id,
         exerciseId: ex.exerciseId,
@@ -40,12 +55,13 @@ function slotsFromWorkout(workout: NextWorkout["workout"]): Slot[] {
         muscleGroup: ex.muscleGroup,
         supersetGroup: ex.supersetGroup,
         restSeconds: ex.restSeconds,
+        technique: ex.technique,
         targetLabel: `${ex.current.sets}x${ex.current.reps}${ex.current.loadKg ? ` · ${ex.current.loadKg}kg sugerido` : ""}`,
         lastUsedLabel: ex.lastUsed
           ? `Última vez: ${ex.lastUsed.reps ?? "?"}x${ex.lastUsed.loadKg ?? "?"}kg`
           : null,
-        sets: Array.from({ length: ex.current.sets }, () => ({
-          reps: defaultReps,
+        sets: targetReps.map((reps) => ({
+          reps,
           loadKg: defaultLoad,
           done: false,
         })),
@@ -155,6 +171,7 @@ export default function LiveWorkout() {
           muscleGroup: exercise.muscleGroup,
           supersetGroup: null,
           restSeconds: null,
+          technique: null,
           targetLabel: "Exercício extra",
           lastUsedLabel: null,
           sets: [
@@ -243,6 +260,9 @@ export default function LiveWorkout() {
                     <div>
                       <h3 className="font-semibold text-zinc-900">{slot.exerciseName}</h3>
                       <p className="text-xs text-zinc-400">{slot.targetLabel}</p>
+                      {slot.technique && (
+                        <p className="text-xs font-medium text-amber-600">⚡ {slot.technique}</p>
+                      )}
                       {slot.lastUsedLabel && (
                         <p className="text-xs text-brand-600">{slot.lastUsedLabel}</p>
                       )}

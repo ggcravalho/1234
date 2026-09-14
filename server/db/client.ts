@@ -17,6 +17,19 @@ function ensureDir(path: string) {
 
 let instance: DatabaseSync | null = null;
 
+/**
+ * Migrações aditivas simples para bancos já criados antes de uma coluna
+ * nova existir. `CREATE TABLE IF NOT EXISTS` não adiciona colunas a uma
+ * tabela pré-existente, então checamos e aplicamos `ALTER TABLE` manualmente.
+ */
+function runMigrations(db: DatabaseSync) {
+  const columns = db.prepare("PRAGMA table_info(plan_exercises)").all() as { name: string }[];
+  const hasTechnique = columns.some((c) => c.name === "technique");
+  if (!hasTechnique) {
+    db.exec("ALTER TABLE plan_exercises ADD COLUMN technique TEXT");
+  }
+}
+
 export function getDb(): DatabaseSync {
   if (instance) return instance;
   ensureDir(DB_PATH);
@@ -24,6 +37,7 @@ export function getDb(): DatabaseSync {
   instance.exec("PRAGMA journal_mode = WAL;");
   instance.exec("PRAGMA foreign_keys = ON;");
   instance.exec(SCHEMA_SQL);
+  runMigrations(instance);
   return instance;
 }
 

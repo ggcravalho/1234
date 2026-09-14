@@ -20,6 +20,7 @@ type PlanExerciseRow = {
   order_in_workout: number;
   superset_group: string | null;
   rest_seconds: number | null;
+  technique: string | null;
   variations_json: string;
 };
 
@@ -68,7 +69,8 @@ function getPlanExerciseRows(planWorkoutId: string): PlanExerciseRow[] {
       `SELECT pe.id as id, pe.plan_workout_id as plan_workout_id, pe.exercise_id as exercise_id,
               e.name as exercise_name, e.muscle_group as muscle_group,
               pe.order_in_workout as order_in_workout, pe.superset_group as superset_group,
-              pe.rest_seconds as rest_seconds, pe.variations_json as variations_json
+              pe.rest_seconds as rest_seconds, pe.technique as technique,
+              pe.variations_json as variations_json
        FROM plan_exercises pe JOIN exercises e ON e.id = pe.exercise_id
        WHERE pe.plan_workout_id = ?
        ORDER BY pe.order_in_workout`,
@@ -115,6 +117,7 @@ function buildPlanWorkout(row: PlanWorkoutRow, userId: string): PlanWorkout {
       order: pe.order_in_workout,
       supersetGroup: pe.superset_group,
       restSeconds: pe.rest_seconds,
+      technique: pe.technique,
       variations,
       current: resolveVariation(variations, occurrenceCount),
       lastUsed: getLastUsed(userId, pe.exercise_id),
@@ -231,8 +234,8 @@ export function savePlan(
 
         db.prepare(
           `INSERT INTO plan_exercises
-             (id, plan_workout_id, exercise_id, order_in_workout, superset_group, rest_seconds, variations_json)
-           VALUES (?, ?, ?, ?, ?, ?, ?)`,
+             (id, plan_workout_id, exercise_id, order_in_workout, superset_group, rest_seconds, technique, variations_json)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         ).run(
           newId(),
           workoutId,
@@ -240,6 +243,7 @@ export function savePlan(
           ex.order,
           ex.supersetGroup,
           ex.restSeconds,
+          ex.technique ?? null,
           JSON.stringify(variations),
         );
       }
